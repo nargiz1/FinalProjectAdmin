@@ -1,13 +1,12 @@
 import React from 'react';
 import Sidebar from '../../components/Sidebar/index';
+import AdvTabs from './AdvTabs/AdvTabs';
 
 const Index = () => {
   return (
     <>
     <Sidebar />
-    <div class="home-section">
-   Adv
-    </div>
+    <div className="home-section"><AdvTabs/></div>
   </>
   )
 }
