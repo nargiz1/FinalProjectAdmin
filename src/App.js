@@ -11,10 +11,13 @@ const AdvPage = React.lazy(() => import("./pages/Advertisement/index"));
 const UsersPage = React.lazy(() => import("./pages/Users/index"));
 const UserPage = React.lazy(() => import("./pages/User/index"));
 const UpdateUserPage = React.lazy(() => import("./pages/UpdateUser/index"));
+const PostPage = React.lazy(() => import("./pages/Post/index"));
 const PostsPage = React.lazy(() => import("./pages/Posts/index"));
 const AccountPage = React.lazy(() => import("./pages/Account/index"));
 const SettingsPage = React.lazy(() => import("./pages/Settings/index"));
 const LoginPage = React.lazy(() => import("./pages/Login/index"));
+const CommentsPage = React.lazy(() => import("./pages/Comments/index"));
+const CommentPage = React.lazy(() => import("./pages/Comment/index"));
 
 function App() {
   const dispatch = useDispatch();
@@ -50,9 +53,12 @@ function App() {
                 <Route path="/updateUser/:userId" element={<UpdateUserPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/posts" element={<PostsPage />} />
+                <Route path="/post/:postId" element={<PostPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="/comments/:postId" element={<CommentsPage />} />
+                <Route path="/comment/:commentId" element={<CommentPage />} />
               </>
             ):
           
