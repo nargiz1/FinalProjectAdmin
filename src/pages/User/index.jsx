@@ -8,9 +8,14 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 
+import classes from "../../styles/user.module.css";
+import { userClasses } from "../../styles/userClasses";
+
 const Index = () => {
   const { userId } = useParams();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.userById);
 
   useEffect(() => {
     (async function () {
@@ -18,8 +23,6 @@ const Index = () => {
       dispatch(setUserById(user));
     })();
   }, [userId, dispatch]);
-
-  const user = useSelector((state) => state.user.userById);
 
   const userActive = async (userId) => {
     await UserService.DisableUnableUser(userId);
@@ -86,6 +89,12 @@ const Index = () => {
                 <h5>Relationship Status:</h5>
                 <p>{user.relationshipStatus}</p>
               </div>
+              {user?.socialMediaLinks?.map((sml, index) => (
+                <div key={index}>
+                  <h5>Social Media Link:</h5>
+                  <p className={classes.user_social_media_link}>{sml.link}</p>
+                </div>
+              ))}
             </div>
             <div className="mt-4 d-flex align-items-center">
               <Link to={`/users`} className="text-decoration-none fs-2 me-5">

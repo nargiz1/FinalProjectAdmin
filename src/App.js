@@ -6,6 +6,7 @@ import { setCurrentUser } from "./redux/User/UserSlice";
 import "../src/App.css";
 
 const DashboardPage = React.lazy(() => import("./pages/Dashboard/index"));
+const AdvsPage = React.lazy(() => import("./pages/Advertisements/index"));
 const AdvPage = React.lazy(() => import("./pages/Advertisement/index"));
 const UsersPage = React.lazy(() => import("./pages/Users/index"));
 const UserPage = React.lazy(() => import("./pages/User/index"));
@@ -42,7 +43,8 @@ function App() {
           (
               <>
                 <Route path="/" element={<DashboardPage />} />
-                <Route path="/adv" element={<AdvPage />} />
+                <Route path="/adv" element={<AdvsPage />} />
+                <Route path="/ad/:adId" element={<AdvPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/user/:userId" element={<UserPage />} />
                 <Route path="/updateUser/:userId" element={<UpdateUserPage />} />
