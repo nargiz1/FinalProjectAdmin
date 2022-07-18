@@ -1,13 +1,12 @@
 import React from 'react';
 import Sidebar from '../../components/Sidebar/index';
+import SettingsTabs from './SettingsTabs/SettingsTabs';
 
 const Index = () => {
   return (
     <>
     <Sidebar />
-    <div class="home-section">
- Settings
-    </div>
+    <div className="home-section"><SettingsTabs/></div>
   </>
   )
 }
