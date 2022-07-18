@@ -74,7 +74,7 @@ const Index = () => {
                   <p>{post.userId}</p>
                 </div>
                 <div>
-                  <h5>Created:</h5>
+                  <h5>Text:</h5>
                   <p>{post.text}</p>
                 </div>
                 <div>
