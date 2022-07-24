@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { HiOutlineViewGrid } from "react-icons/hi";
 import { FiSettings } from "react-icons/fi";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers,FaUserCircle } from "react-icons/fa";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import { RiAdvertisementFill,RiLogoutBoxRLine } from "react-icons/ri";
+import { RiAdvertisementFill,RiLogoutBoxRLine,RiLockPasswordLine } from "react-icons/ri";
 import { BsFilePost } from "react-icons/bs";
 import * as authServices from "../../services/AuthService";
 import { setLogin } from "../../redux/Auth/AuthSlice";
@@ -63,11 +63,21 @@ const Index = () => {
           </Link>
         </li>
         <li>
-          <Link to={"/settings"}>
+          <Link to={"/profile"}>
             <i class="bx bx-grid-alt">
-              <FiSettings />
+              <FaUserCircle />
             </i>
-            <span className="links_name">Settings</span>
+            <span className="links_name">Profile</span>
+       
+          </Link>
+        </li>
+        <li>
+          <Link to={"/privacy"}>
+            <i class="bx bx-grid-alt">
+              <RiLockPasswordLine/>
+            </i>
+            <span className="links_name">Privacy</span>
+       
           </Link>
         </li>
         <li  onClick={(e) => logoutHandler()}>

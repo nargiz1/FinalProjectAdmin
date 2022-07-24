@@ -1,50 +1,75 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import * as userServices from "../../services/UserService";
+import { setCurrentUser } from "../../redux/User/UserSlice";
 import * as authServices from "../../services/AuthService";
 import { setLogin } from "../../redux/Auth/AuthSlice";
 import LoginSVG from "../../helpers/images/login.svg";
 
 const Index = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(true);
 
-  const [authData, setAuthData] = useState({
-    email: "",
-    password: "",
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email.")
+      .required("Email is required."),
+    password: Yup.string()
+      .min(8, "min length")
+      .required("Password is required.")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      ),
   });
 
-  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      // console.log("values formik: ", values);
+    },
+  });
 
-  const backToLogin = {
-    textDecoration: "none",
-    color: "#393939",
-    fontStyle: "italic",
-  };
 
-  const handleChange = (name, value) => {
-    setAuthData({ ...authData, [name]: value });
-  };
+  useEffect(() => {
+    if (Object.entries(formik.errors).length === 0 && Object.entries(formik.touched).length !== 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [formik]);
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (authData.email !== "" && authData.password !== "") {
+  
       try {
-        const resp = await authServices.LoginService(authData);
+        const resp = await authServices.LoginService(formik.values);
 
         if (resp && resp.token) {
-          toast.success("User was loggined successfully!");
           dispatch(setLogin(resp.token));
           sessionStorage.setItem("token", resp.token);
+          const user = await userServices.getUserService();
+          dispatch(setCurrentUser(user));
+          toast.success("Admin was loggined successfully!");
           navigate("/");
         } else {
-          toast.error("User was not loggined or Please, look to gmail!");
+          toast.error("Something went wrong,please try again!");
         }
       } catch (error) {
         console.log("error: ", error);
       }
-    }
+ 
   };
 
   return (
@@ -68,10 +93,18 @@ const Index = () => {
                     type="email"
                     name="email"
                     placeholder="Email"
-                    onChange={(e) =>
-                      handleChange(e.target.name, e.target.value)
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={
+                      formik.touched.email && formik.errors.email
+                        ? { border: "1px solid red" }
+                        : null
                     }
+                    value={formik.values.email}
                   />
+                    {formik.touched.email && formik.errors.email && (
+                    <p style={{ color: "red",fontSize:"13px" }}>{formik.errors.email}</p>
+                  )}
                 </div>
                 <div className="mb-4">
                   <input
@@ -81,16 +114,26 @@ const Index = () => {
                     type="password"
                     name="password"
                     placeholder="Password"
-                    onChange={(e) =>
-                      handleChange(e.target.name, e.target.value)
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={
+                      formik.touched.password && formik.errors.password
+                        ? { border: "1px solid red" }
+                        : null
                     }
+                    value={formik.values.password}
                   />
+                     {formik.touched.password && formik.errors.password && (
+                    <p style={{ color: "red",fontSize:"13px" }}>{formik.errors.password}</p>
+                  )}
                 </div>
                 <div className="mb-4">
                   <button
                     className="w-100 fw-bold"
                     type="submit"
                     onClick={handleSubmit}
+                    disabled={disabled}
+                    style={ disabled ? { backgroundColor: 'grey', color: '#fff', cursor: 'not-allowed' } : null}
                   >
                     Log In
                   </button>
