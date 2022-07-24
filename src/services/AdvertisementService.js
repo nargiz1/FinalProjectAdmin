@@ -30,7 +30,7 @@ export async function expireAdService(advId) {
     console.log("err: ", error);
   }
 };
-export async function getAdsService() {
+export async function getAdsService(pagination) {
   try {
     return await (
       await Axios.get(`/api/Advertisement/getAll`, {
@@ -40,8 +40,8 @@ export async function getAdsService() {
           Accept: "application/json",
         },
         params: {
-          Skip: 0,
-          Take: 10,
+          Skip: pagination.start,
+          Take: pagination.limit,
         },
       })
     ).data;
@@ -60,6 +60,36 @@ export async function getUAdByIdService(adId) {
         },
         params: {
           advId: adId,
+        },
+      })
+    ).data;
+  } catch (error) {
+    console.log("err: ", error);
+  }
+}
+export async function UpdateAdService(payload) {
+  try {
+    return await (
+      await Axios.post(`/api/Advertisement/update`, payload, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+    ).data;
+  } catch (error) {
+    console.log("err: ", error);
+  }
+}
+export async function DeleteAdService(payload) {
+  try {
+    return await (
+      await Axios.post(`/api/Advertisement/delete`, payload, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       })
     ).data;

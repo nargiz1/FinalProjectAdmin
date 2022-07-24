@@ -14,7 +14,7 @@ import * as AdvService from "../../../services/AdvertisementService";
 import { useDispatch } from "react-redux";
 import { setAds } from "../../../redux/Advertisement/AdvertisementSlice";
 import { Link } from "react-router-dom";
-
+import Pagination from "../../../components/Pagination/Pagination";
 
 const AdvTabs = () => {
   const [value, setValue] = React.useState(0);
@@ -29,15 +29,24 @@ const AdvTabs = () => {
   });
   const dispatch = useDispatch();
 
+  const [pagination, setPagination] = useState({
+    start: 0,
+    limit: 9,
+    pageNumber: 0
+  })
+
+  const [pageCount, setPageCount] = useState(0);
+
   const ads = useSelector((state) => state.ad.ads);
   console.log(ads)
 
   useEffect(() => {
     (async function () {
-      const ads = await AdvService.getAdsService();
+      const ads = await AdvService.getAdsService(pagination);
       dispatch(setAds(ads.ads));
+      setPageCount(Math.ceil(ads.count/pagination.limit))
     })();
-  }, [dispatch]);
+  }, [pagination, dispatch]);
 
   const handleChangeAd = (name, value) => {
     setCreateAd({ ...createAd, [name]: value });
@@ -83,7 +92,7 @@ const AdvTabs = () => {
               <tbody>
                 {ads?.map((ad, index) => (
                   <tr key={index}>
-                    <th scope="row">{index}</th>
+                    <th scope="row">{index+1}</th>
                     <td>{ad.id}</td>
                     <td>{ad.created}</td>
                     <td>{ad.isExpired === true ? "true" : "false"}</td>
@@ -103,6 +112,7 @@ const AdvTabs = () => {
               </tbody>
             </table>
           </div>
+          <Pagination pageCount={pageCount} pagination={pagination} setPagination={setPagination}/>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <div className="container mb-5 mt-3">

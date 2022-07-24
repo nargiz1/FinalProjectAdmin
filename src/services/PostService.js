@@ -1,18 +1,18 @@
 import Axios from "../helpers/setupAxios";
 import { useSelector } from "react-redux";
 
-export async function getAllPostsService() {
+export async function getAllPostsService(pagination) {
   try {
     return await (
-      await Axios.get(`/api/Post/getAllPosts`, {
+      await Axios.get(`/api/Post/allPostsForAdmin`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
         params: {            
-            "Skip": 0,
-            "Take": 10,
+            "Skip": pagination.start,
+            "Take": pagination.limit,
         }
       })
       ).data;

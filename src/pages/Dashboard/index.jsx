@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BsFilePost } from "react-icons/bs";
 import { FaComments, FaUsers } from "react-icons/fa";
@@ -20,13 +20,18 @@ const Index = () => {
   const posts = useSelector((state) => state?.post?.posts);
   const ads = useSelector((state) => state?.ad?.ads);
 
+  const [pagination, setPagination] = useState({
+    start: 0,
+    limit: 1,
+  })
+
   useEffect(() => {
     (async function () {
-      const users = await userServices.getUsersService();
+      const users = await userServices.getUsersService(pagination);
+      const posts = await postServices.getAllPostsService(pagination);
+      const ads = await advServices.getAdsService(pagination);
       dispatch(setUsers(users));
-      const posts = await postServices.getAllPostsService();
       dispatch(setPosts(posts));
-      const ads = await advServices.getAdsService();
       dispatch(setAds(ads));
     })();
   }, [dispatch]);
